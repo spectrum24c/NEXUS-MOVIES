@@ -1,0 +1,287 @@
+/* css slider */
+.slider{
+    height: 100vh;
+    margin-top: -89px;
+    position: relative;
+}
+.slider .list .item{
+    position: absolute;
+    inset: 0 0 0 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: .5s; top: 0;
+}
+.slider .list .item img{
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+}
+.slider .list .item::after{
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background-image: linear-gradient(
+        to top, #000 0%, transparent
+    );
+}
+.slider .list .item .content{
+    position: absolute;
+    left: 10%;
+    top: 20%;
+    width: 500px;
+    max-width: 80%;
+    z-index: 1;
+}
+.slider .list .item .content p:nth-child(1){
+    text-transform: uppercase;
+    letter-spacing: 10px;
+}
+.slider .list .item .content h2{
+    font-size: 100px;
+    margin: 0;
+}
+.slider .list .item.active{
+    opacity: 1150%;
+    z-index: 10;
+}
+@keyframes showContent {
+    to{
+        transform: translateY(0);
+        filter: blur(0);
+        opacity: 1;
+    }
+}
+.slider .list .item.active p:nth-child(1),
+.slider .list .item.active h2,
+.slider .list .item.active p:nth-child(3){
+    transform: translateY(30px);
+    filter: blur(20px);
+    opacity: 0;
+    animation: showContent .5s .7s ease-in-out 1 forwards;
+}
+.slider .list .item.active h2{
+    animation-delay: 1s;
+}
+.slider .list .item.active p:nth-child(3){
+    animation-duration: 1.3s;
+}
+.arrows{
+    position: absolute;
+    top: 30%;
+    right: 50px;
+    z-index: 100;
+    display: none;
+}
+.arrows button{
+    background-color: #eee5;
+    border: none;
+    font-family: monospace;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: x-large;
+    color: #eee;
+    transition: .5s;
+}
+.arrows button:hover{
+    background-color: #eee;
+    color: black;
+}
+.thumbnail{
+    position: absolute;
+    bottom: -20px;
+    z-index: 11;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    height: 240px;
+    padding: 0 50px;
+    box-sizing: border-box;
+    overflow-x: auto; /* Ensure horizontal scrolling */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    justify-content: start;
+}
+.thumbnail::-webkit-scrollbar{
+    width: 0;
+    overflow-y: hidden;
+}
+.thumbnail .item{
+    width: 150px;
+    height: 220px;
+    filter: brightness(.5);
+    transition: .5s;
+    flex-shrink: 0;
+    overflow: hidden; /* Prevent overflow */
+}
+.thumbnail .item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.thumbnail .item.active{
+    filter: brightness(1);
+}
+.thumbnail .item .content{
+    position: absolute;
+    inset: auto 10px 10px 10px;
+}
+@media screen and (max-width: 678px) {
+    #smile{
+        position: relative;
+        left: 18px;
+    }
+    .thumbnail{
+        justify-content: start;
+    }
+    .slider .list .item .content h2{
+        font-size: 60px;
+    }
+    .arrows{
+        top: 10%;
+    }
+
+    .slider .list .item img{
+        width: 100%;
+        height: 120%;
+        object-fit: contain;
+        margin-top: -196px;
+        position: sticky;
+    }
+    .slider .list .item .content{
+        position: absolute;
+        left: 10%;
+        top: 20%;
+        width: 500px;
+        max-width: 80%;
+        z-index: 1;
+    }
+    .thumbnail{
+        position: absolute;
+        bottom: -10px;
+        z-index: 11;
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        height: 240px;
+        padding: 0 50px;
+        box-sizing: border-box;
+        overflow: auto;
+        justify-content: start;
+    }
+    #movies-cont{
+        margin-top: -39px;
+    }
+    .search-container input {
+        width: 90px;
+        top: -33px;
+        left: 39px;
+      }
+      .search-container{
+        width: 150px;
+        left: 19px;
+      }
+}
+
+/* New styles for .movies-cont and #movies-cont */
+
+#movies-cont{
+    background: #000;
+    overflow-x: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.movie-item {
+    transition: transform 0.3s ease;  
+}
+
+.movie-item img {
+    margin-right: 20px;
+    width: 220px;
+    height: 270px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.movie-item:hover {
+    transform: scale(1.02);
+}
+
+/* Styles for player-container and trailer-container */
+.player-container, .trailer-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 102;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.player-container .movie-details, .trailer-container .movie-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.player-container .movie-details img, .trailer-container .movie-details img {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.player-container .movie-details h2, .trailer-container .movie-details h2 {
+    margin: 0 0 5px 0;
+}
+
+.player-container .movie-details p, .trailer-container .movie-details p {
+    margin: 0 0 20px 0;
+    text-align: center;
+}
+
+.player-container .movie-details button, .trailer-container .movie-details button, 
+.player-container .movie-details a, .trailer-container .movie-details a {
+    padding: 10px 20px;
+    background-color: #e50914;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 678px) {
+    .player-container, .trailer-container {
+        padding: 10px;
+        height: 100%;
+    }
+
+    .player-container .movie-details img, .trailer-container .movie-details img {
+        max-width: 300px;
+    }
+
+    .player-container .movie-details h2, .trailer-container .movie-details h2 {
+       display: none;
+    }
+
+    .player-container .movie-details p, .trailer-container .movie-details p {
+        font-size: 14px;
+        
+    }
+
+    .player-container .movie-details button, .trailer-container .movie-details button, 
+    .player-container .movie-details a, .trailer-container .movie-details a {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
