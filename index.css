@@ -402,6 +402,18 @@ body {
   gap: 40px;
 }
 
+.movies-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+
+
+.movies-cont {
+    position: relative;
+}
+
 /* Add this CSS to handle the blur effect and search results container */
 .blur {
     filter: blur(5px);
