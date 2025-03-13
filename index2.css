@@ -266,15 +266,15 @@
 .player-container .movie-info{
  overflow-y: auto;
 }
-#movies-cont .movie-info{
-display: none;
-}
+
 @media screen and (max-width: 678px) {
     .player-container, .trailer-container {
         padding: 10px;
         height: 100%;
     }
-
+#movies-cont .movie-info{
+display: none;
+}
     .player-container .movie-details img, .trailer-container .movie-details img {
         max-width: 300px;
     }
