@@ -426,4 +426,3 @@ function displayResults(movies) {
 
     searchResultsCont.innerHTML = resultsSectionHTML;
 }
-

@@ -166,3 +166,50 @@
   animation: opacity 19s ease-out;
   animation-delay: 10s;
 }
+
+.seasons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+   
+}
+
+.seasons-container button {
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.seasons-container button:hover {
+    background-color: #555;
+}
+
+.episodes-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    overflow: auto;
+}
+
+.episodes-container button {
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.episodes-container button:hover {
+    background-color: #555;
+}
+
+.exit-btn:hover {
+    background-color: #c00;
+}

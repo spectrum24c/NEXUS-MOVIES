@@ -234,7 +234,7 @@
 .player-container .movie-details img, .trailer-container .movie-details img {
     width: 100%;
     max-width: 300px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .player-container .movie-details h2, .trailer-container .movie-details h2 {
@@ -284,4 +284,3 @@
         font-size: 14px;
     }
 }
-
