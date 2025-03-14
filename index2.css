@@ -172,11 +172,18 @@
         overflow: auto;
         justify-content: start;
     }
-    .thumbnail .item:nth-child(2),.thumbnail .item:nth-child(4),.thumbnail .item:nth-child(5){
+    .thumbnail .item:nth-child(2),.thumbnail .item:nth-child(4),.thumbnail .item:nth-child(5),.thumbnail .item:nth-child(1),.thumbnail .item:nth-child(3){
      display: none;
     }
+    .slider .list .item::after{
+    display: none;
+    }
+    .slider .list .item img{
+        height: 120%;
+        object-fit: contain;
+    }
     #movies-cont{
-        margin-top: -39px;
+        margin-top: -329px;
     }
     .search-container input {
         width: 90px;
