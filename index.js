@@ -11,6 +11,7 @@ const apiPaths = {
     fetchMoviesList: (id) => `${tmdbApiEndpoint}/discover/movie?api_key=${apiKeys.tmdb}&with_genres=${id}`,
     fetchTrending: `${tmdbApiEndpoint}/trending/all/day?api_key=${apiKeys.tmdb}&language=en-US`,
     searchMoviesTMDb: (query) => `${tmdbApiEndpoint}/search/movie?api_key=${apiKeys.tmdb}&query=${query}`,
+    searchTVShowsTMDb: (query) => `${tmdbApiEndpoint}/search/tv?api_key=${apiKeys.tmdb}&query=${query}`, // Add TV show search endpoint
     searchAnimeJikan: (query) => `https://api.jikan.moe/v4/anime?q=${query}`, // Directly use the URL
     fetchPopularMovies: `${tmdbApiEndpoint}/movie/popular?api_key=${apiKeys.tmdb}&language=en-US`,
     searchOnYoutube: (query) => `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&key=${apiKeys.youtube}`,
@@ -19,7 +20,8 @@ const apiPaths = {
     fetchTVShowDetails: (tvShowId) => `${tmdbApiEndpoint}/tv/${tvShowId}?api_key=${apiKeys.tmdb}&language=en-US`, // Fetch TV show details from TMDb
     fetchTVShowEpisodes: (tvShowId, seasonNumber) => `${tmdbApiEndpoint}/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKeys.tmdb}&language=en-US`, // Fetch TV show episodes from TMDb
     fetchPopularTVShows: `${tmdbApiEndpoint}/tv/popular?api_key=${apiKeys.tmdb}&language=en-US`, // Fetch popular TV shows
-    fetchPopularAnimatedSeries: `${tmdbApiEndpoint}/discover/tv?api_key=${apiKeys.tmdb}&with_genres=16&language=en-US` // Fetch popular animated series
+    fetchPopularAnimatedSeries: `${tmdbApiEndpoint}/discover/tv?api_key=${apiKeys.tmdb}&with_genres=16&language=en-US`, // Fetch popular animated series
+    discoverTVShows: `${tmdbApiEndpoint}/discover/tv?api_key=${apiKeys.tmdb}` // Add discover TV shows endpoint
 };
 
 let exploredCategoryId = null; // Keep track of the explored category ID
@@ -264,13 +266,13 @@ function playMovie(movieId, isTVShow = false) {
                         <h2>${details.title || details.name}</h2>
                         <p>${truncatedOverview}</p>
                         ${isTVShow ? buildSeasonsDropdown(details) : ''}
-                        <button onclick="playTrailer('${details.id}', ${isTVShow})">Watch Trailer</button>
-                        <button onclick="playStreaming('${details.id}', ${isTVShow})">Watch Now</button>
+                        <button onclick="playTrailer('${details.id}', ${isTVShow}, '${details.name}')">Watch Trailer</button>
+                        <button onclick="playStreaming('${details.id}', ${isTVShow}, '${details.name}')">Watch Now</button>
                         <button onclick="downloadMovie('${details.id}')">Download</button>
                         <button onclick="exitPlayer()">Exit</button>
                     </div>
                 </div>
-                <iframe id="movie-player" src="" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+                <iframe id="movie-player" src="" width="100%" height="100%" frameborder="0" allowfullscreen referrerpolicy="origin"></iframe>
             `;
             playerContainer.style.display = 'block';
         })
@@ -304,16 +306,40 @@ function fetchEpisodes(tvShowId, seasonNumber) {
         .catch(err => console.error(err));
 }
 
-async function playStreaming(movieId, isTVShow = false, seasonNumber = null, episodeNumber = null) {
+async function playStreaming(movieId, isTVShow = false, seriesName = '', seasonNumber = null, episodeNumber = null) {
+    const ninjaBoyRantaroTmdbId = '12345'; // Replace with the actual TMDb ID for Ninja Boy Rantaro
     const streamingUrl = isTVShow 
-        ? `https://vidsrc.in/embed/${movieId}/${seasonNumber}/${episodeNumber}` 
+        ? movieId === ninjaBoyRantaroTmdbId 
+            ? `https://vidsrc.xyz/embed/tv?tmdb=${movieId}&season=${seasonNumber}&episode=${episodeNumber}&ds_lang=en` 
+            : `https://vidsrc.xyz/embed/tv?tmdb=${movieId}&season=${seasonNumber}&episode=${episodeNumber}&ds_lang=en`
         : `https://vidsrc.in/embed/${movieId}`; // Use VidSrc API for streaming
     const streamingCont = document.getElementById('streaming-cont');
     streamingCont.innerHTML = `
         <button class="close-btn" onclick="exitStreaming()">Close</button>
-        <iframe id="movie-player-${movieId}" src="${streamingUrl}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+        <iframe id="movie-player-${movieId}" src="${streamingUrl}" width="100%" height="100%" frameborder="0" referrerpolicy="origin" allowfullscreen></iframe>
     `;
     streamingCont.style.display = 'flex';
+}
+
+async function playTrailer(movieId, isTVShow = false, seriesName = '') {
+    const trailerUrl = isTVShow 
+        ? `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${seriesName} trailer&key=${apiKeys.youtube}`
+        : apiPaths.fetchMovieTrailer(movieId);
+    try {
+        const res = await fetch(trailerUrl);
+        const data = await res.json();
+        const trailer = isTVShow ? data.items[0] : data.results.find(video => video.type === 'Trailer');
+        if (trailer) {
+            const trailerContainer = document.querySelector('.trailer-container');
+            trailerContainer.innerHTML = `
+                <button class="close-btn" onclick="exitTrailer()">Close</button>
+                <iframe id="trailer-player" src="https://www.youtube.com/embed/${trailer.id.videoId || trailer.key}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+            `;
+            trailerContainer.style.display = 'flex';
+        }
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 function exitStreaming() {
@@ -322,34 +348,7 @@ function exitStreaming() {
     streamingCont.innerHTML = '';
 }
 
-async function downloadMovie(movieId) {
-    const response = await fetch(apiPaths.fetchMovieDetails(movieId));
-    const movie = await response.json();
-    const movieTitle = movie.title || movie.name;
 
-    const downloadApiUrl = "http://your-backend-url/download"; // Update this with your backend URL
-
-    const requestBody = JSON.stringify({
-        url: `https://vidsrc.to/embed/${movieId}` // Replace with a valid source
-    });
-
-    try {
-        const res = await fetch(downloadApiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: requestBody
-        });
-
-        const data = await res.json();
-        if (data.file) {
-            window.open(`http://your-backend-url/download-file/${data.file}`, "_blank");
-        } else {
-            alert("Download failed!");
-        }
-    } catch (error) {
-        console.error("Download error:", error);
-    }
-}
 
 function exitPlayer() {
     const playerContainer = document.querySelector('.player-container');
@@ -399,15 +398,17 @@ movieSearchInput.addEventListener('focus', function () {
 });
 
 function searchMovies(query) {
-    const tmdbUrl = apiPaths.searchMoviesTMDb(query);
+    const tmdbMoviesUrl = apiPaths.searchMoviesTMDb(query);
+    const tmdbTVShowsUrl = apiPaths.searchTVShowsTMDb(query);
     const jikanUrl = apiPaths.searchAnimeJikan(query);
 
-    Promise.all([fetch(tmdbUrl), fetch(jikanUrl)])
+    Promise.all([fetch(tmdbMoviesUrl), fetch(tmdbTVShowsUrl), fetch(jikanUrl)])
         .then(responses => Promise.all(responses.map(res => res.json())))
         .then(data => {
-            const tmdbResults = data[0].results || [];
-            const jikanResults = data[1].data || [];
-            const combinedResults = [...tmdbResults, ...jikanResults];
+            const tmdbMoviesResults = data[0].results || [];
+            const tmdbTVShowsResults = data[1].results || [];
+            const jikanResults = data[2].data || [];
+            const combinedResults = [...tmdbMoviesResults, ...tmdbTVShowsResults, ...jikanResults];
             filterAndDisplayResults(combinedResults);
         })
         .catch(error => {
@@ -450,4 +451,19 @@ function displayResults(movies) {
     `;
 
     searchResultsCont.innerHTML = resultsSectionHTML;
+}
+
+// Fetch and display discovered TV shows
+async function fetchAndDisplayDiscoveredTVShows() {
+    const discoverUrl = apiPaths.discoverTVShows;
+    try {
+        const res = await fetch(discoverUrl);
+        const data = await res.json();
+        const tvShows = data.results;
+        if (Array.isArray(tvShows) && tvShows.length) {
+            buildTVShowsSection(tvShows, 'Discovered TV Shows');
+        }
+    } catch (err) {
+        console.error(err);
+    }
 }
