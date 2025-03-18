@@ -305,6 +305,12 @@ display: none;
         align-items: center;
         color: white;
     }
+    .slider .list .item .content h2{
+        font-size: 30px;
+    }
+    .slider .list .item.active p:nth-child(3){
+        font-size: 14px;
+    }
 }
 
 /* Styles for navigation arrows in #movies-cont */
