@@ -171,7 +171,7 @@ function buildMoviesSection(list, categoryName, categoryId) {
     const moviesListHTML = list.map(item => {
         return `
         <div class="movie-item" onclick="playMovie('${item.id}')">
-            <img decoding="async" class="move-item-img" src="${imgPath}${item.poster_path}" alt="${item.title || item.name}" />
+            <img loading="lazy" decoding="async" class="move-item-img" src="${imgPath}${item.poster_path}" alt="${item.title || item.name}" />
             <div class="movie-info">
                 <h3>${item.title || item.name}</h3>
             </div>
@@ -201,7 +201,7 @@ function buildTVShowsSection(list, categoryName) {
     const tvShowsListHTML = list.map(item => {
         return `
         <div class="movie-item" onclick="playMovie('${item.id}', true)">
-            <img decoding="async" class="move-item-img" src="${imgPath}${item.poster_path}" alt="${item.name}" />
+            <img loading="lazy" decoding="async" class="move-item-img" src="${imgPath}${item.poster_path}" alt="${item.name}" />
             <div class="movie-info">
                 <h3>${item.name}</h3>
             </div>
@@ -231,7 +231,7 @@ function buildAnimeSection(list, categoryName) {
     const moviesListHTML = list.map(item => {
         return `
         <div class="movie-item" onclick="playAnimeTrailer('${item.title}')">
-            <img decoding="async" class="move-item-img" src="${item.images.jpg.image_url}" alt="${item.title_english || item.title}" />
+            <img loading="lazy" decoding="async" class="move-item-img" src="${item.images.jpg.image_url}" alt="${item.title_english || item.title}" />
             <div class="movie-info">
                 <h3>${item.title_english || item.title}</h3>
             </div>
