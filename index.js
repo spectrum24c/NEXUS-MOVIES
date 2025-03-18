@@ -5,6 +5,7 @@ const apiKeys = {
 
 const tmdbApiEndpoint = "https://api.themoviedb.org/3";
 const imgPath = "https://image.tmdb.org/t/p/original"; // Use the original image size for better quality
+const TVapiendpoint = "https://api.themoviedb.org/3/search/tv"; // New TMDb TV search endpoint
 
 const apiPaths = {
     fetchAllCategories: `${tmdbApiEndpoint}/genre/movie/list?api_key=${apiKeys.tmdb}`,
@@ -12,7 +13,7 @@ const apiPaths = {
     fetchTrending: `${tmdbApiEndpoint}/trending/all/day?api_key=${apiKeys.tmdb}&language=en-US`,
     searchMoviesTMDb: (query) => `${tmdbApiEndpoint}/search/movie?api_key=${apiKeys.tmdb}&query=${query}`,
     searchTVShowsTMDb: (query) => `${tmdbApiEndpoint}/search/tv?api_key=${apiKeys.tmdb}&query=${query}`, // Add TV show search endpoint
-    searchAnimeJikan: (query) => `https://api.jikan.moe/v4/anime?q=${query}`, // Directly use the URL
+    searchAnimeJikan: (query) => `${TVapiendpoint}?api_key=${apiKeys.tmdb}&query=${query}`, // Use TMDb TV search endpoint
     fetchPopularMovies: `${tmdbApiEndpoint}/movie/popular?api_key=${apiKeys.tmdb}&language=en-US`,
     searchOnYoutube: (query) => `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&key=${apiKeys.youtube}`,
     fetchMovieDetails: (movieId) => `${tmdbApiEndpoint}/movie/${movieId}?api_key=${apiKeys.tmdb}&language=en-US`, // Fetch movie details from TMDb
@@ -379,13 +380,12 @@ movieSearchInput.addEventListener('input', function (event) {
     const searchResultsCont = document.getElementById('search-results-cont');
 
     if (query.length > 2) { // Start searching after 3 characters
-        searchMovies(query);
+        searchMoviesAndTVShows(query);
         searchResultsCont.style.display = 'block';
     } else {
-        // Clear search results and reset to normal when input is empty
+        // Clear search results and hide the container when input is empty
         searchResultsCont.innerHTML = '';
         searchResultsCont.style.display = 'none';
-        restoreMoviesCont();
     }
 });
 
@@ -397,45 +397,33 @@ movieSearchInput.addEventListener('focus', function () {
     movieSearchInput.style.cursor = 'text';
 });
 
-function searchMovies(query) {
+function searchMoviesAndTVShows(query) {
     const tmdbMoviesUrl = apiPaths.searchMoviesTMDb(query);
     const tmdbTVShowsUrl = apiPaths.searchTVShowsTMDb(query);
-    const jikanUrl = apiPaths.searchAnimeJikan(query);
 
-    Promise.all([fetch(tmdbMoviesUrl), fetch(tmdbTVShowsUrl), fetch(jikanUrl)])
+    Promise.all([fetch(tmdbMoviesUrl), fetch(tmdbTVShowsUrl)])
         .then(responses => Promise.all(responses.map(res => res.json())))
         .then(data => {
             const tmdbMoviesResults = data[0].results || [];
             const tmdbTVShowsResults = data[1].results || [];
-            const jikanResults = data[2].data || [];
-            const combinedResults = [...tmdbMoviesResults, ...tmdbTVShowsResults, ...jikanResults];
-            filterAndDisplayResults(combinedResults);
+            const combinedResults = [...tmdbMoviesResults, ...tmdbTVShowsResults];
+            displaySearchResults(combinedResults);
         })
         .catch(error => {
             console.error('Error fetching data:', error);
         });
 }
 
-async function filterAndDisplayResults(movies) {
-    const moviesWithTrailers = [];
-    for (const movie of movies) {
-        const trailer = await fetchMovieTrailer(movie.id || movie.mal_id);
-        if (trailer) {
-            moviesWithTrailers.push(movie);
-        }
-    }
-    displayResults(moviesWithTrailers);
-}
-
-function displayResults(movies) {
+function displaySearchResults(results) {
     const searchResultsCont = document.getElementById('search-results-cont');
     searchResultsCont.innerHTML = ''; // Clear previous results
 
-    const moviesListHTML = movies.map(movie => {
-        const posterPath = movie.poster_path ? `${imgPath}${movie.poster_path}` : movie.images?.jpg?.image_url;
-        const title = movie.title || movie.title_english || movie.name;
+    const resultsListHTML = results.map(item => {
+        const posterPath = item.poster_path ? `${imgPath}${item.poster_path}` : '';
+        const title = item.title || item.name;
+        const isTVShow = item.media_type === 'tv' || item.first_air_date; // Check if it's a TV show
         return `
-        <div class="movie-item" onclick="playMovie('${movie.id || movie.mal_id}')">
+        <div class="movie-item" onclick="playMovie('${item.id}', ${isTVShow})">
             <img decoding="async" class="move-item-img" src="${posterPath}" alt="${title}" />
             <div class="movie-info">
                 <h3>${title}</h3>
@@ -446,7 +434,7 @@ function displayResults(movies) {
     const resultsSectionHTML = `
         <h2 class="movie-section-heading">Search Results</h2>
         <div class="movies-row">
-            ${moviesListHTML}
+            ${resultsListHTML}
         </div>
     `;
 
