@@ -8,235 +8,130 @@
 }
 
 body {
-  background: #000;
-  transition: opacity 1s ease-in-out;
+  background: url("images/electric.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
+
+@media screen and (max-width: 678px) {
+  body {
+    background: url("images/electric.jpg");
+    background-position: center !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    height: 20rem !important;
+  }
 
 body::before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
-  opacity: 0.5;
+  background-image: linear-gradient(
+    to top,#000 0.5%, transparent
+  );
   width: 100%;
-  height: 100%;
-  background: url("images/hero-img.jpg");
-  background-position: center;
- 
+  height: 120%;
+  z-index: -1;
 }
-
-nav {
-  position: fixed;
-  padding: 25px 60px;
-  z-index: 1;
-}
-
-nav a img {
-  width: 167px;
-}
-
-.form-wrapper {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 4px;
-  padding: 50px;
-  width: 450px;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.75);
-  opacity: 0;
-   transition: opacity 1s ease-in-out;
-}
-
-.form-wrapper h2 {
-  color: #fff;
-  font-size: 2rem;
-}
-
-.form-wrapper form {
-  margin: 25px 0 65px;
-}
-
-form .form-control {
-  height: 50px;
-  position: relative;
-  margin-bottom: 16px;
-}
-
-.form-control input {
-  height: 100%;
-  width: 100%;
-  background: #333;
-  border: none;
-  outline: none;
-  border-radius: 4px;
-  color: #fff;
-  font-size: 1rem;
-  padding: 0 20px;
-}
-
-.form-control input:is(:focus, :valid) {
-  background: #444;
-  padding: 16px 20px 0;
-}
-
-.form-control label {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  pointer-events: none;
-  color: #8c8c8c;
-  transition: all 0.1s ease;
-}
-
-.form-control input:is(:focus, :valid) ~ label {
-  font-size: 0.75rem;
-  transform: translateY(-130%);
-}
-
-form button {
-  width: 100%;
-  padding: 16px 0;
-  font-size: 1rem;
-  background: #e50914;
-  color: #fff;
-  font-weight: 500;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  margin: 25px 0 10px;
-  cursor: pointer;
-  transition: 0.1s ease;
-}
-
-form button:hover {
-  background: #c40812;
-}
-
-.form-wrapper a {
-  text-decoration: none;
-}
-
-.form-wrapper a:hover {
-  text-decoration: underline;
-}
-
-.form-wrapper :where(label, p, small, a) {
-  color: #b3b3b3;
-}
-
-form .form-help {
-  display: flex;
-  justify-content: space-between;
-}
-
-form .remember-me {
-  display: flex;
-}
-
-form .remember-me input {
-  margin-right: 5px;
-  accent-color: #b3b3b3;
-}
-
-form .form-help :where(label, a) {
-  font-size: 0.9rem;
-}
-
-.form-wrapper p a {
-  color: #fff;
-}
-
-.form-wrapper small {
-  display: block;
-  margin-top: 15px;
-  color: #b3b3b3;
-}
-
-.form-wrapper small a {
-  color: #0071eb;
-}
-
-@media (max-width: 740px) {
-  body::before {
+  .opt {
     display: none;
   }
-
-  nav,
-  .form-wrapper {
-    padding: 20px;
+  .str {
+    justify-content: center;
+    text-align: center;
+    margin-top: 160% !important;
+    z-index: 100;
+  }
+  h1 {
+    font-size: 30px !important;
+    color: #fff;
   }
 
-  nav a img {
-    width: 140px;
+  h5 {
+    font-size: medium !important;
+    color: #fff;
+    font-weight: lighter;
   }
 
-  .form-wrapper {
-    width: 100%;
-    top: 43%;
+  .btn{
+    background-color: #fff;
+    color: #000;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    width: 350px;
+    height: 40px;
+    font-size: larger;
+    font-weight: bold;
+    margin-bottom: 15px;
   }
 
-  .form-wrapper form {
-    margin: 25px 0 40px;
-  }
+  .btn2{
+    background-color: transparent;
+    color: #fff;
+    outline:2px solid #fff;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    width: 350px;
+    height: 40px;
+    font-size: larger;
+    font-weight: bold;
+  } 
 }
 
-.background {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: black;
+.opt2 {
+  display: none;
 }
 
-.background .logo {
-  width: 150px;
-  height: max-content;
-  justify-content: space-between;
-  position: relative;
+.str {
+  text-align: center;
+  margin-top: 15%;
 }
 
-.background .logo .brush1 {
-  width: 50px;
-  height: 220px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  position: relative;
+h1 {
+  font-size: 70px;
+  color: #fff;
 }
 
-.background .logo .brush1 .color {
-  width: 100%;
-  height: 100%;
-  background: red;
-  z-index: 2;
+h5 {
+  font-size: 20px;
+  color: #fff;
+  font-weight: lighter;
 }
 
-.background .logo .brush2 {
-  width: 50px;
-  height: 220px;
-  display: flex;
-  align-self: flex-end;
+.btn{
+  background-color: #fff;
+  color: #000;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  width: 350px;
+  height: 40px;
+  font-size: larger;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 
-.background .logo .brush2 .color2 {
-  width: 100%;
-  height: 100%;
-  background-color: red;
+.btn2{
+  background-color: transparent;
+  color: #fff;
+  outline:2px solid #fff;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  width: 350px;
+  height: 40px;
+  font-size: larger;
+  font-weight: bold;
 }
-
-.background .logo .brush3 {
-  width: 50px;
-  height: 220px;
-  position: absolute;
-  z-index: 2;
-  transform: skew(24.4deg);
-  transform-origin: top left;
-  background-color: red;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.33);
-}
-
-
