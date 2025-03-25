@@ -5,19 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wetflix Login</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="./app.js" defer></script>
 </head>
 <body>
-    <div class="str">
-    <h1>Streaming all movies <span class="opt">on the go</span></h1>
-    <h1><span class="opt2">on the go</span></h1>
-    <p><h5>Stream 4k quality movies,enjoy with unlimited entertainment on your hands</h5></p>
 
-        <form action="signin.html">
-            <button class="btn">Sign In</button>
+    <nav>
+        <a href="#"><img src="images/logo.svg" alt="logo"></a>
+    </nav>  
+     <div class="form-wrapper">
+        <h2>Sign Up</h2>
+        <form action="home.html" >
+            <div class="form-control">
+                <input type="text" required>
+                <label>Email or phone number</label>
+            </div>
+            <div class="form-control">
+                <input type="password" required>
+                <label>Password</label>
+            </div>
+            <button type="submit">Sign In</button>
+            <div class="form-help"> 
+                <div class="remember-me">
+                    <input type="checkbox" id="remember-me">
+                    <label for="remember-me">Remember me</label>
+                </div>
+                <a href="#">Need help?</a>
+            </div>
         </form>
-        <form action="#">
-            <button class="btn2">Sign Up</button>
-        </form>
-</div>
+        <p>New to Netflix? <a href="#">Sign up now</a></p>
+        <small>
+            This page is protected by Google reCAPTCHA to ensure you're not a bot. 
+            <a href="#">Learn more.</a>
+        </small>
+    </div> 
+    <div class="background" id="splash-screen">
+      <div class="logo">
+        <div class="brush1">
+          <div class="color"></div>
+          <div class="lines"></div>
+        </div>
+        <div class="brush2">
+          <div class="color2"></div>
+          </div>
+          <div class="brush3"></div>
+          </div>
+          </div>
+   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(function() {
+        document.getElementById("splash-screen").style.opacity = "0";
+        document.getElementById("splash-screen").style.zIndex = "-1";
+        document.querySelector(".form-wrapper").style.opacity = "1";
+      }, 8500); 
+    });
+   </script>
 </body>
 </html>
